@@ -17,15 +17,32 @@ class ViewController: UIViewController {
         #"c = \pm\sqrt{a^2 + b^2}\in\RR"#,
     ]
 
-    lazy var katexView = KatexView(latex: latexs[3], options: [.displayMode: true, .macros: [#"\RR"#: #"\mathbb{R}"#]])
+    lazy var katexView = KatexView(latex: latexs[0], options: [.displayMode: true, .macros: [#"\RR"#: #"\mathbb{R}"#]])
+    
+    lazy var textView = UITextView()
+    
+    lazy var modeSwitch : UISwitch = {
+        let modeSwitch = UISwitch()
+        modeSwitch.addTarget(self, action: #selector(switchAction(_:)), for: .valueChanged)
+        modeSwitch.isOn = katexView.displayMode
+        return modeSwitch
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(katexView)
+        view.addSubview(textView)
+        view.addSubview(modeSwitch)
+        textView.delegate = self
+        textView.text = latexs[0]
     }
 
     override func viewWillLayoutSubviews() {
-        katexView.frame = CGRect(x: 0, y: 100, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 100)
+        view.backgroundColor = .blue
+        modeSwitch.backgroundColor = .white
+        katexView.frame = CGRect(x: 0, y: 100, width: UIScreen.main.bounds.width, height: 200)
+        textView.frame = CGRect(x:0, y: 300, width: UIScreen.main.bounds.width, height: 200)
+        modeSwitch.frame.origin = CGPoint(x: 10, y: 510)
     }
 
     override func didReceiveMemoryWarning() {
@@ -35,3 +52,15 @@ class ViewController: UIViewController {
 
 }
 
+extension ViewController : UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        katexView.latex = textView.text
+    }
+}
+
+
+extension ViewController {
+    @objc func switchAction(_ modeSwitch: UISwitch) {
+        katexView.displayMode = modeSwitch.isOn
+    }
+}
