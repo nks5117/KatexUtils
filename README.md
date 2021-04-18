@@ -29,7 +29,7 @@ var katexView = KatexView(latex: #"c = \pm\sqrt{a^2 + b^2}\in\RR"#,
                           ])
 ```
 
-`KatexView` will automaticlly make itself scrollable when it's frame can not contains the whole formula. You can also observe the  `status` property to do some customize change when rendering is finished:
+`KatexView` will automaticlly make itself scrollable when it's frame can not contains the whole formula. You can also observe the  `status` property to handle error or do some customize change when rendering is finished successfully:
 
 ```swift
 cancellable = katexView.$status.sink { [weak self] status in
@@ -44,6 +44,8 @@ cancellable = katexView.$status.sink { [weak self] status in
                    y: 0,
                    width: min(contentSize?.width ?? .infinity, MAXWIDTH),
                    height: min(contentSize?.height  ?? .infinity, MAXHEIGHT))
+    case .error(let message):
+        fatalError(message)
     default:
         return
     }

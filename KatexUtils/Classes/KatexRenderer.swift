@@ -47,7 +47,7 @@ public class KatexRenderer {
         return ""
     }
 
-    public static func renderToString(latex: String, options: [Key : Any]? = nil) -> String? {
+    public static func renderToString(latex: String, options: [Key : Any]? = nil) throws -> String? {
         jsContext.setObject(latex, forKeyedSubscript: "latex" as (NSCopying & NSObjectProtocol))
 
         var jsOptions = [String : Any]()
@@ -58,12 +58,34 @@ public class KatexRenderer {
         }
 
         jsContext.setObject(jsOptions, forKeyedSubscript: "options" as (NSCopying & NSObjectProtocol))
-
-        if let html = jsContext.evaluateScript("katex.renderToString(latex, options)")?.toString() {
-            return html
+        
+        let script = """
+        try {
+            var html = katex.renderToString(latex, options);
+        } catch (error) {
+            if (error instanceof katex.ParseError) {
+                var errorMessage = error.message
+                var katexParseError = error
+            } else {
+                throw error;  // other error
+            }
         }
+        """
+        jsContext.evaluateScript(script)
 
-        return nil
+        if
+            let errorMessageObject = jsContext.objectForKeyedSubscript("errorMessage"),
+            let katexParseErrorObject = jsContext.objectForKeyedSubscript("katexParseError"),
+            !errorMessageObject.isUndefined && !katexParseErrorObject.isUndefined && !errorMessageObject.isNull && !katexParseErrorObject.isNull,
+            let errorMessage = errorMessageObject.toString()
+        {
+            jsContext.evaluateScript("errorMessage = katexParseError = null;")
+            throw KatexError.parseError(message: errorMessage, rawObject: katexParseErrorObject)
+        } else if let html = jsContext.objectForKeyedSubscript("html")?.toString() {
+            return html
+        } else {
+            throw KatexError.unknown
+        }
     }
 }
 
@@ -96,5 +118,10 @@ public extension KatexRenderer {
         public static let strict = Key("strict")
         public static let trust = Key("trust")
         public static let globalGroup = Key("globalGroup")
+    }
+    
+    enum KatexError: Error {
+        case unknown
+        case parseError(message: String, rawObject: JSValue)
     }
 }

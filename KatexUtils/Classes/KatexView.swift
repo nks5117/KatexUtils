@@ -15,6 +15,7 @@ public final class KatexView : UIView {
         case loading
         case finished
         case idle
+        case error(message: String)
     }
 
     @Published
@@ -53,7 +54,6 @@ public final class KatexView : UIView {
         }
         set {
             options[.displayMode] = newValue
-            reload()
         }
     }
 
@@ -69,6 +69,8 @@ public final class KatexView : UIView {
                 self?.status = .finished
                 self?.setNeedsLayout()
                 self?.invalidateIntrinsicContentSize()
+            case .error(let message):
+                self?.status = .error(message: message)
             }
         }.store(in: &cancellables)
         return katexWebView
@@ -111,7 +113,7 @@ public final class KatexView : UIView {
     }
 
     public override func layoutSubviews() {
-        if (status == .finished) {
+        if case .finished = status {
             let contentSize = katexWebView.intrinsicContentSize
             katexWebView.frame.size = contentSize
             scrollView.contentSize = contentSize
@@ -134,6 +136,7 @@ extension KatexView {
             case loading
             case finished
             case idle
+            case error(message: String)
         }
 
         @Published
@@ -168,7 +171,7 @@ extension KatexView {
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             let script = """
                 [document.body.scrollWidth > document.body.clientWidth ? document.body.scrollWidth : document.getElementById('tex').getBoundingClientRect().width,
-                 document.body.scrollHeight > document.body.clientHeight ? document.body.scrollHeight : document.getElementById('container').getBoundingClientRect().height]
+                 document.getElementsByTagName('html')[0].getBoundingClientRect().height]
             """
             webView.evaluateJavaScript(script) { (result, error) in
                 if let result = result as? Array<CGFloat> {
@@ -192,7 +195,6 @@ extension KatexView {
 
             isOpaque = false
             backgroundColor = .white
-
         }
 
         required init?(coder: NSCoder) {
@@ -200,14 +202,20 @@ extension KatexView {
         }
 
         func loadLatex(_ latex: String, options: [KatexRenderer.Key : Any]? = nil) {
-            let htmlString = getHtmlString(latex: latex, options: options)
-            status = .loading
-            loadHTMLString(htmlString, baseURL: URL(fileURLWithPath: Self.templateHtmlPath))
+            do {
+                let htmlString = try getHtmlString(latex: latex, options: options)
+                status = .loading
+                loadHTMLString(htmlString, baseURL: URL(fileURLWithPath: Self.templateHtmlPath))
+            } catch KatexRenderer.KatexError.parseError(let message, _) {
+                status = .error(message: message)
+            } catch {
+                fatalError()
+            }
         }
 
-        func getHtmlString(latex: String, options: [KatexRenderer.Key : Any]? = nil) -> String {
+        func getHtmlString(latex: String, options: [KatexRenderer.Key : Any]? = nil) throws -> String {
             let htmlString = Self.templateHtmlString
-            guard let insertHtml = KatexRenderer.renderToString(latex: latex, options: options) else {
+            guard let insertHtml = try KatexRenderer.renderToString(latex: latex, options: options) else {
                 return ""
             }
             return htmlString.replacingOccurrences(of: "$LATEX$", with: insertHtml)

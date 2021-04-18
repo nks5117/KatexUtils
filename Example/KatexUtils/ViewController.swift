@@ -8,6 +8,7 @@
 
 import UIKit
 import KatexUtils
+import Combine
 
 class ViewController: UIViewController {
     let latexs = [
@@ -15,11 +16,30 @@ class ViewController: UIViewController {
         #"a+b"#,
         #"a^2+b^2=c^2"#,
         #"c = \pm\sqrt{a^2 + b^2}\in\RR"#,
+        #"F(x)=P(X \leq x)=\int_{-\infty}^{x} f(t) \, \mathrm{d} t, \quad x \in \R"#,
+        #"""
+        % \f is defined as #1f(#2) using the macro
+        
+        \f\relax{x} = \int_{-\infty}^\infty
+        \f\hat\xi\,e^{2 \pi i \xi x}
+        \,d\xi
+        """#
     ]
 
-    lazy var katexView = KatexView(latex: latexs[0], options: [.displayMode: true, .macros: [#"\RR"#: #"\mathbb{R}"#]])
+    lazy var katexView = KatexView(latex: latexs[5],  options: [.displayMode: true, .macros: [#"\RR"#: #"\mathbb{R}"#, #"\f"#: #"#1f(#2)"#]])
     
-    lazy var textView = UITextView()
+    lazy var textView : UITextView = {
+        let textView = UITextView()
+        textView.delegate = self
+        textView.autocorrectionType = .no
+        textView.autocapitalizationType = .none
+        textView.spellCheckingType = .no
+        textView.smartQuotesType = .no
+        textView.smartDashesType = .no
+        textView.smartInsertDeleteType = .no
+        textView.font = .monospacedSystemFont(ofSize: 15, weight: .regular)
+        return textView
+    }()
     
     lazy var modeSwitch : UISwitch = {
         let modeSwitch = UISwitch()
@@ -27,22 +47,52 @@ class ViewController: UIViewController {
         modeSwitch.isOn = katexView.displayMode
         return modeSwitch
     }()
+    
+    lazy var displayModeLabel = UILabel()
+    
+    lazy var errorLabel = UILabel()
+
+    var cancellables = [AnyCancellable]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(katexView)
         view.addSubview(textView)
         view.addSubview(modeSwitch)
-        textView.delegate = self
-        textView.text = latexs[0]
+        view.addSubview(displayModeLabel)
+        view.addSubview(errorLabel)
+        displayModeLabel.text = "Display Mode"
+        displayModeLabel.textAlignment = .center
+        textView.text = katexView.latex
+        errorLabel.lineBreakMode = .byWordWrapping
+        errorLabel.numberOfLines = 0
+        errorLabel.text = ""
+        katexView.$status.sink { [weak self] (status) in
+            switch status {
+            case .error(let message):
+                self?.errorLabel.text = "error: \(message)"
+                self?.view.setNeedsLayout()
+            case .finished:
+                self?.errorLabel.text = ""
+                self?.view.setNeedsLayout()
+            default:
+                break
+            }
+        }.store(in: &cancellables)
     }
 
     override func viewWillLayoutSubviews() {
-        view.backgroundColor = .blue
+        view.backgroundColor = .gray
         modeSwitch.backgroundColor = .white
+        displayModeLabel.backgroundColor = .white
+        displayModeLabel.textColor = .black
         katexView.frame = CGRect(x: 0, y: 100, width: UIScreen.main.bounds.width, height: 200)
-        textView.frame = CGRect(x:0, y: 300, width: UIScreen.main.bounds.width, height: 200)
-        modeSwitch.frame.origin = CGPoint(x: 10, y: 510)
+        textView.frame = CGRect(x:0, y: 310, width: UIScreen.main.bounds.width, height: 200)
+        displayModeLabel.sizeToFit()
+        displayModeLabel.frame = CGRect(x: 0, y: 520, width: displayModeLabel.frame.width + 20, height: modeSwitch.frame.height)
+        modeSwitch.frame.origin = CGPoint(x: displayModeLabel.frame.width, y: 520)
+        errorLabel.frame.origin = CGPoint(x: 0, y: 530 + modeSwitch.frame.height)
+        errorLabel.frame.size = errorLabel.sizeThatFits(UIScreen.main.bounds.size)
     }
 
     override func didReceiveMemoryWarning() {
