@@ -33,8 +33,14 @@ public final class KatexView : UIView {
 
     private var cancellables = [AnyCancellable]()
     
-    public var maxSize: CGSize = UIScreen.main.bounds.size {
-        didSet {
+    private var _maxSize: CGSize = UIScreen.main.bounds.size
+    
+    public var maxSize: CGSize {
+        get {
+            CGSize(width: max(frame.size.width, _maxSize.width), height: max(frame.size.height, _maxSize.height))
+        }
+        set {
+            _maxSize = newValue
             reload()
         }
     }

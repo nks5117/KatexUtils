@@ -73,7 +73,7 @@ pod 'KatexUtils'
 
 ## Author
 
-nikesu, 1026001096@qq.com
+Ni Kesu, 1026001096@qq.com
 
 ## License
 
