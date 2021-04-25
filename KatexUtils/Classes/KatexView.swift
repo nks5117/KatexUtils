@@ -62,6 +62,12 @@ public final class KatexView : UIView {
             options[.displayMode] = newValue
         }
     }
+    
+    public var customCss : String? = nil {
+        didSet {
+            reload()
+        }
+    }
 
     private lazy var katexWebView: KatexWebView = {
         let katexWebView = KatexWebView()
@@ -130,7 +136,7 @@ public final class KatexView : UIView {
     
     public func reload() {
         katexWebView.frame = CGRect(origin: .zero, size: maxSize)
-        katexWebView.loadLatex(latex, options: options)
+        katexWebView.loadLatex(latex, options: options, customCss: customCss)
     }
 }
 
@@ -207,9 +213,9 @@ extension KatexView {
             fatalError("init(coder:) has not been implemented")
         }
 
-        func loadLatex(_ latex: String, options: [KatexRenderer.Key : Any]? = nil) {
+        func loadLatex(_ latex: String, options: [KatexRenderer.Key : Any]? = nil, customCss: String? = nil) {
             do {
-                let htmlString = try getHtmlString(latex: latex, options: options)
+                let htmlString = try getHtmlString(latex: latex, options: options, customCss: customCss)
                 status = .loading
                 loadHTMLString(htmlString, baseURL: URL(fileURLWithPath: Self.templateHtmlPath))
             } catch KatexRenderer.KatexError.parseError(let message, _) {
@@ -219,12 +225,14 @@ extension KatexView {
             }
         }
 
-        func getHtmlString(latex: String, options: [KatexRenderer.Key : Any]? = nil) throws -> String {
-            let htmlString = Self.templateHtmlString
+        func getHtmlString(latex: String, options: [KatexRenderer.Key : Any]? = nil, customCss: String? = nil) throws -> String {
+            var htmlString = Self.templateHtmlString
             guard let insertHtml = try KatexRenderer.renderToString(latex: latex, options: options) else {
                 return ""
             }
-            return htmlString.replacingOccurrences(of: "$LATEX$", with: insertHtml)
+            htmlString = htmlString.replacingOccurrences(of: "CUSTOM_CSS", with: customCss ?? "")
+            htmlString = htmlString.replacingOccurrences(of: "$LATEX$", with: insertHtml)
+            return htmlString
         }
     }
 }
