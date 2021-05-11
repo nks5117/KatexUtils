@@ -206,7 +206,7 @@ extension KatexView {
             navigationDelegate = self
 
             isOpaque = false
-            backgroundColor = .white
+            backgroundColor = .clear
         }
 
         required init?(coder: NSCoder) {

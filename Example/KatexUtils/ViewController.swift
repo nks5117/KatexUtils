@@ -22,11 +22,16 @@ class ViewController: UIViewController {
         
         \f\relax{x} = \int_{-\infty}^\infty
         \f\hat\xi\,e^{2 \pi i \xi x}
-        \,d\xi
+        \,\mathrm{d}\xi
         """#
     ]
 
-    lazy var katexView = KatexView(latex: latexs[5],  options: [.displayMode: true, .macros: [#"\RR"#: #"\mathbb{R}"#, #"\f"#: #"#1f(#2)"#]])
+    lazy var katexView : KatexView = {
+        let katexView = KatexView(latex: latexs[5],  options: [.displayMode: true, .macros: [#"\RR"#: #"\mathbb{R}"#, #"\f"#: #"#1f(#2)"#]])
+        katexView.backgroundColor = .darkGray
+        katexView.customCss = ".katex { color: white; }"
+        return katexView
+    }()
     
     lazy var textView : UITextView = {
         let textView = UITextView()
@@ -86,7 +91,7 @@ class ViewController: UIViewController {
         modeSwitch.backgroundColor = .white
         displayModeLabel.backgroundColor = .white
         displayModeLabel.textColor = .black
-        katexView.frame = CGRect(x: 0, y: 100, width: UIScreen.main.bounds.width, height: 200)
+        katexView.frame = CGRect(x: 0, y: 100, width: min(katexView.intrinsicContentSize.width, UIScreen.main.bounds.width), height: min(katexView.intrinsicContentSize.height, 200))
         textView.frame = CGRect(x:0, y: 310, width: UIScreen.main.bounds.width, height: 200)
         displayModeLabel.sizeToFit()
         displayModeLabel.frame = CGRect(x: 0, y: 520, width: displayModeLabel.frame.width + 20, height: modeSwitch.frame.height)

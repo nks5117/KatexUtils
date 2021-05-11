@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'KatexUtils'
-  s.version          = '0.2.2'
+  s.version          = '0.2.3'
   s.summary          = 'KaTeX solution for iOS'
 
 # This description is used to generate tags and improve search results.
@@ -25,7 +25,7 @@ TODO: Add long description of the pod here.
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'nikesu' => '1026001096@qq.com' }
-  s.source           = { :git => 'https://github.com/nks5117/KatexUtils.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/nks5117/KatexUtils.git', :tag => s.version }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.swift_version = "5.3"
