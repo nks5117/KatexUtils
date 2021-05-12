@@ -47,7 +47,7 @@ public class KatexRenderer {
         return ""
     }
 
-    public static func renderToString(latex: String, options: [Key : Any]? = nil) throws -> String? {
+    public static func renderToString(latex: String, options: [Key : Any]? = nil) throws -> String {
         jsContext.setObject(latex, forKeyedSubscript: "latex" as (NSCopying & NSObjectProtocol))
 
         var jsOptions = [String : Any]()

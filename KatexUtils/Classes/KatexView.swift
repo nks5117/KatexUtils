@@ -227,9 +227,7 @@ extension KatexView {
 
         func getHtmlString(latex: String, options: [KatexRenderer.Key : Any]? = nil, customCss: String? = nil) throws -> String {
             var htmlString = Self.templateHtmlString
-            guard let insertHtml = try KatexRenderer.renderToString(latex: latex, options: options) else {
-                return ""
-            }
+            let insertHtml = try KatexRenderer.renderToString(latex: latex, options: options)
             htmlString = htmlString.replacingOccurrences(of: "CUSTOM_CSS", with: customCss ?? "")
             htmlString = htmlString.replacingOccurrences(of: "$LATEX$", with: insertHtml)
             return htmlString
