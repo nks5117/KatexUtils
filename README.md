@@ -61,14 +61,26 @@ let str = KatexRenderer.renderToString(latex: "a^2 + b^2 = c^2", options: [.disp
 ## Requirements
 
 - iOS 13.0
+- Swift 5.3
 
 ## Installation
 
-KatexUtils is available through [CocoaPods](https://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+### CocoaPods
+
+KatexUtils is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'KatexUtils'
+pod 'KatexUtils', '~> 0.3.0'
+```
+
+### Installation with Swift Package Manager
+
+Once you have your Swift package set up, adding KatexUtils as a dependency is as easy as adding it to the `dependencies` value of your `Package.swift`:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/nks5117/KatexUtils.git", .upToNextMinor(from: "0.3.0"))
+]
 ```
 
 ## Author
