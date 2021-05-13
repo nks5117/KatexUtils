@@ -40,6 +40,9 @@ public final class KatexView : UIView {
             CGSize(width: max(frame.size.width, _maxSize.width), height: max(frame.size.height, _maxSize.height))
         }
         set {
+            if _maxSize == newValue {
+                return
+            }
             _maxSize = newValue
             reload()
         }
@@ -98,6 +101,7 @@ public final class KatexView : UIView {
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        self.clipsToBounds = true
         self.addSubview(self.scrollView)
         self.scrollView.addSubview(self.katexWebView)
     }
