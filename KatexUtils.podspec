@@ -33,6 +33,8 @@ TODO: Add long description of the pod here.
 
   s.frameworks = 'UIKit', 'JavaScriptCore', 'WebKit'
 
+  s.static_framework = true
+
   s.default_subspec = 'Core'
 
   s.subspec 'Core' do |ss|
@@ -43,7 +45,7 @@ TODO: Add long description of the pod here.
   s.subspec 'Resources' do |ss|
     ss.resource_bundle = {
       'KatexUtils' => [
-        'KatexUtils/Assets/**/*',
+        'KatexUtils/Assets/**',
       ]
     }
   end

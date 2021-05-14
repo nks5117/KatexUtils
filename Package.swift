@@ -13,5 +13,5 @@ let package = Package(name: "KatexUtils",
                       targets: [
                         .target(name: "KatexUtils",
                                 path: "KatexUtils",
-                                resources: [.copy("Assets/Resources")])
+                                resources: [.copy("Assets")])
                       ])
