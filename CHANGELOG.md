@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.3.1 (2021-05-14)
+
+- Change the default value of `KatexView.clipsToBounds` to `true`.
+- Set to `KatexView.maxSize` will not reload the view if the new value is equal to the old one.
+- `KatexRenderer.jsContext` is now public.
+
 ## v0.3.0 (2021-05-12)
 
 - Add support for Swift Package Manager.
