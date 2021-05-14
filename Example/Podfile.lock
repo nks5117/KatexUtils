@@ -1,9 +1,9 @@
 PODS:
-  - KatexUtils (0.3.0):
-    - KatexUtils/Core (= 0.3.0)
-  - KatexUtils/Core (0.3.0):
+  - KatexUtils (0.3.1):
+    - KatexUtils/Core (= 0.3.1)
+  - KatexUtils/Core (0.3.1):
     - KatexUtils/Resources
-  - KatexUtils/Resources (0.3.0)
+  - KatexUtils/Resources (0.3.1)
 
 DEPENDENCIES:
   - KatexUtils (from `../`)
@@ -13,7 +13,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  KatexUtils: a94530d4631fbe6508841765ceec056d8600aef2
+  KatexUtils: 256686992404a7f0a0b85956c70d24314fcfb550
 
 PODFILE CHECKSUM: 3bb86b7e2d92fd1cec9aa87f4785c872c6bc4674
 

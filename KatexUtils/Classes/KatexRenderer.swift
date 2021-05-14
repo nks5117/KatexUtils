@@ -25,7 +25,7 @@ public class KatexRenderer {
         }
     }()
 
-    private static var jsContext: JSContext = {
+    public static var jsContext: JSContext = {
         guard let context = JSContext(virtualMachine: JSVirtualMachine()) else {
             fatalError()
         }

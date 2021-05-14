@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'KatexUtils'
-  s.version          = '0.3.0'
+  s.version          = '0.3.1'
   s.summary          = 'KaTeX solution for iOS'
 
 # This description is used to generate tags and improve search results.
@@ -43,7 +43,7 @@ TODO: Add long description of the pod here.
   s.subspec 'Resources' do |ss|
     ss.resource_bundle = {
       'KatexUtils' => [
-        'KatexUtils/Assets/**',
+        'KatexUtils/Assets/**/*',
       ]
     }
   end
