@@ -6,6 +6,8 @@
 [![License](https://img.shields.io/cocoapods/l/KatexUtils.svg?style=flat)](https://cocoapods.org/pods/KatexUtils)
 [![Platform](https://img.shields.io/cocoapods/p/KatexUtils.svg?style=flat)](https://cocoapods.org/pods/KatexUtils)
 
+> Note: KatexUtils is still in development, and the API is not guaranteed to be stable. It's subject to change without warning.
+
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.

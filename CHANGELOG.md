@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.3.3 (2021-05-16)
+- New `Katex` class, allow use a custom `jsContext`.
+- `KatexRenderer` is now just a wrapper of `Katex`.
+
+## v0.3.2 (deprecated)
+
 ## v0.3.1 (2021-05-14)
 
 - Change the default value of `KatexView.clipsToBounds` to `true`.

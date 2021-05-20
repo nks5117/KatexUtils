@@ -48,7 +48,7 @@ public final class KatexView : UIView {
         }
     }
     
-    public var options = [KatexRenderer.Key : Any]() {
+    public var options = [Katex.Key : Any]() {
         didSet {
             reload()
         }
@@ -110,7 +110,7 @@ public final class KatexView : UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public convenience init(frame: CGRect = .zero, latex: String, maxSize: CGSize? = nil, options: [KatexRenderer.Key : Any]? = nil) {
+    public convenience init(frame: CGRect = .zero, latex: String, maxSize: CGSize? = nil, options: [Katex.Key : Any]? = nil) {
         self.init(frame: frame)
         self.latex = latex
         if let options = options {
@@ -217,19 +217,19 @@ extension KatexView {
             fatalError("init(coder:) has not been implemented")
         }
 
-        func loadLatex(_ latex: String, options: [KatexRenderer.Key : Any]? = nil, customCss: String? = nil) {
+        func loadLatex(_ latex: String, options: [Katex.Key : Any]? = nil, customCss: String? = nil) {
             do {
                 let htmlString = try getHtmlString(latex: latex, options: options, customCss: customCss)
                 status = .loading
                 loadHTMLString(htmlString, baseURL: URL(fileURLWithPath: Self.templateHtmlPath))
-            } catch KatexRenderer.KatexError.parseError(let message, _) {
+            } catch Katex.KatexError.parseError(let message, _) {
                 status = .error(message: message)
             } catch {
                 fatalError()
             }
         }
 
-        func getHtmlString(latex: String, options: [KatexRenderer.Key : Any]? = nil, customCss: String? = nil) throws -> String {
+        func getHtmlString(latex: String, options: [Katex.Key : Any]? = nil, customCss: String? = nil) throws -> String {
             var htmlString = Self.templateHtmlString
             let insertHtml = try KatexRenderer.renderToString(latex: latex, options: options)
             htmlString = htmlString.replacingOccurrences(of: "CUSTOM_CSS", with: customCss ?? "")
