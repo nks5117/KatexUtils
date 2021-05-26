@@ -191,7 +191,6 @@ extension KatexView {
             """
             webView.evaluateJavaScript(script) { (result, error) in
                 if let result = result as? Array<CGFloat> {
-                    print(result)
                     self.contentSize = CGSize(width: result[0], height: result[1])
                     self.status = .finished
                 }
