@@ -2,7 +2,7 @@
 //  Katex.swift
 //  KatexUtils
 //
-//  Created by 倪可塑 on 2021/5/20.
+//  Created by nikesu on 2021/5/20.
 //
 
 import Foundation
@@ -12,7 +12,7 @@ import JavaScriptCore
 public class Katex {
     private static var katexJsPath: String = {
         guard let path = Bundle.katexBundle?.path(forResource: "katex/katex.min", ofType: "js") else {
-            fatalError()
+            fatalError("[KatexUtils] Can not find katex file.")
         }
         return path
     }()
@@ -22,7 +22,7 @@ public class Katex {
             let katexJsString = try String(contentsOfFile: katexJsPath, encoding: .utf8)
             return katexJsString
         } catch {
-            fatalError()
+            fatalError("[KatexUtils] Open katex file failed.")
         }
     }()
     

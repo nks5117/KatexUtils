@@ -166,7 +166,7 @@ extension KatexView {
 
         private static var templateHtmlPath: String = {
             guard let path = Bundle.katexBundle?.path(forResource: "katex/index", ofType: "html") else {
-                fatalError()
+                fatalError("[KatexUtils] Can not find template HTML file.")
             }
             return path
         }()
@@ -176,7 +176,7 @@ extension KatexView {
                 let templateHtmlString = try String(contentsOfFile: templateHtmlPath, encoding: .utf8)
                 return templateHtmlString
             } catch {
-                fatalError()
+                fatalError("[KatexUtils] Open template HTML file failed.")
             }
         }()
 
@@ -224,7 +224,7 @@ extension KatexView {
             } catch Katex.KatexError.parseError(let message, _) {
                 status = .error(message: message)
             } catch {
-                fatalError()
+                status = .error(message: "Can not load LaTeX formula.")
             }
         }
 

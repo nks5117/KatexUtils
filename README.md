@@ -60,6 +60,8 @@ cancellable = katexView.$status.sink { [weak self] status in
 let str = KatexRenderer.renderToString(latex: "a^2 + b^2 = c^2", options: [.displayMode : true])
 ```
 
+For supported functions, check the [document](https://katex.org/docs/supported.html) of `KaTeX`.
+
 ## Requirements
 
 - iOS 13.0
